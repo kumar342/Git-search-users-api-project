@@ -9,6 +9,7 @@ export default class Dashboard extends Component {
     data: [],
     currentPage: "" || 1,
     TotalCount: 0,
+    setInputValue: "",
   };
 
   getData = async (page) => {
@@ -25,15 +26,30 @@ export default class Dashboard extends Component {
 
   componentDidMount = async () => {
     await this.getData(this.state.currentPage);
+    console.log(this.state.data);
   };
   changeCurrentPage = async (numpage) => {
     await this.setState({ currentPage: numpage });
     console.log(this.state.currentPage);
     await this.getData(numpage);
   };
+  changeHandler = (e) => {
+    this.setState({ setInputValue: e.target.value });
+    console.log(this.state.setInputValue);
+  };
   render() {
     return (
       <div>
+        <div className="search-input mt-3">
+          <input
+            className="border-3 p-2 w-1/6"
+            type="text"
+            placeholder="Search for a user"
+            onChange={this.changeHandler}
+          />
+        </div>
+        <br />
+
         <div className="grid">
           {this.state.data.map((item, i) => {
             return (
@@ -43,10 +59,15 @@ export default class Dashboard extends Component {
                   src={item.avatar_url}
                   alt="Card cap"
                 />
-                <div className="card-body">
-                  <a href={item.html_url} className="btn btn-success">
+                <div className="card-body d-flex">
+                  <a href={item.html_url} className="btn btn-info btn-sm  mr-3">
                     Github
                   </a>
+                  &nbsp;
+                  <strong>
+                    {" "}
+                    <p>{item.login.toUpperCase()}</p>
+                  </strong>
                 </div>
               </div>
             );
@@ -61,8 +82,8 @@ export default class Dashboard extends Component {
             onChange={this.changeCurrentPage}
             prevPageText="prev"
             nextPageText="next"
-            firstPageText="first"
-            lastPageText="last"
+            // firstPageText="first"
+            // lastPageText="last"
             itemClass="page-item"
             linkClass="page-link"
           />
