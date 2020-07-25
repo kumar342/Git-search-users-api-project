@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Footer from "./Footer";
 import axios from "axios";
 import "../App.css";
 import Pagination from "react-js-pagination";
@@ -9,7 +8,7 @@ export default class Dashboard extends Component {
     data: [],
     currentPage: "" || 1,
     TotalCount: 0,
-    setInputValue: "",
+    search: "",
   };
 
   getData = async (page) => {
@@ -30,49 +29,75 @@ export default class Dashboard extends Component {
   };
   changeCurrentPage = async (numpage) => {
     await this.setState({ currentPage: numpage });
-    console.log(this.state.currentPage);
     await this.getData(numpage);
   };
-  changeHandler = (e) => {
-    this.setState({ setInputValue: e.target.value });
-    console.log(this.state.setInputValue);
+  userChange = async (e) => {
+    await this.setState({ search: e.target.value });
+  };
+  userSubmit = async (e) => {
+    const { search } = this.state;
+    const searchUser = search.split(" ").join("").toLowerCase();
+    e.preventDefault();
+    await axios
+      .get(`https://api.github.com/users/${searchUser}`)
+      .then((res) => {
+        console.log(res.data);
+        let userArray = [];
+        userArray.push(res.data);
+        this.setState({ data: userArray });
+      })
+      .catch((err) => err);
   };
   render() {
     return (
-      <div>
-        <div className="search-input mt-3">
-          <input
-            className="border-3 p-2 w-1/6"
-            type="text"
-            placeholder="Search for a user"
-            onChange={this.changeHandler}
-          />
+      <div className="container">
+        <div>
+          <form className="d-flex mt-5" onSubmit={this.userSubmit}>
+            <div className="form-group mr-2">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter the Github User"
+                onChange={this.userChange}
+              />
+            </div>
+            <button type="submit" className="btn" onSubmit={this.userSubmit}>
+              Search
+            </button>
+          </form>
         </div>
         <br />
-
-        <div className="grid">
-          {this.state.data.map((item, i) => {
-            return (
-              <div className="card" style={{ width: "18rem" }} key={i}>
-                <img
-                  className="card-img-top"
-                  src={item.avatar_url}
-                  alt="Card cap"
-                />
-                <div className="card-body d-flex">
-                  <a href={item.html_url} className="btn btn-info btn-sm  mr-3">
-                    Github
-                  </a>
-                  &nbsp;
-                  <strong>
-                    {" "}
-                    <p>{item.login.toUpperCase()}</p>
-                  </strong>
+        {this.state.data ? (
+          <div className="grid">
+            {this.state.data.map((item, i) => {
+              return (
+                <div className="card" key={i}>
+                  <img
+                    className="card-img-top"
+                    src={item.avatar_url}
+                    alt="Card cap"
+                  />
+                  <div className="card-body d-flex">
+                    <a
+                      href={item.html_url}
+                      className="btn btn-info btn-sm  mr-3"
+                    >
+                      Github
+                    </a>
+                    &nbsp;
+                    <strong>
+                      {" "}
+                      <p>{item.login.toUpperCase()}</p>
+                    </strong>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          "No User found"
+        )}
+
         <div className="page">
           <Pagination
             activePage={this.state.currentPage}
@@ -82,14 +107,13 @@ export default class Dashboard extends Component {
             onChange={this.changeCurrentPage}
             prevPageText="prev"
             nextPageText="next"
-            // firstPageText="first"
-            // lastPageText="last"
+            firstPageText="first"
+            lastPageText="last"
             itemClass="page-item"
             linkClass="page-link"
           />
         </div>
         <br />
-        <Footer />
       </div>
     );
   }
