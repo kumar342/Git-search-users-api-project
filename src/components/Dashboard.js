@@ -108,7 +108,8 @@ export default class Dashboard extends Component {
           ) : (
             "No User found"
           )}
-
+          <br />
+          <br />
           <div className="page">
             <Pagination
               activePage={this.state.currentPage}
