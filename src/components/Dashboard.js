@@ -51,31 +51,32 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div>
-        <nav
-          className="navbar navbar-expand-lg navbar-dark"
-          style={{ backgroundColor: "#0074D9" }}
-        >
-          <div className="container">
-            <form className="d-flex mt-2" onSubmit={this.userSubmit}>
-              <i
-                className="fa fa-user-o mt-2 mr-2"
-                style={{ color: "white" }}
-              ></i>
+        <div>
+          <nav
+            className="navbar navbar-expand-lg navbar-dark "
+            style={{ backgroundColor: "#0074D9" }}
+          >
+            {" "}
+            <h5 className="navbar-brand mr-5">Github Users</h5>
+            <form className="form-inline mt-1" onSubmit={this.userSubmit}>
+              <i className="fa fa-user-o  mr-2" style={{ color: "white" }}></i>
               &nbsp;
-              <div className="form-group mr-2">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Enter the Github User"
-                  onChange={this.userChange}
-                />
-              </div>
-              <button type="submit" className="btn" onSubmit={this.userSubmit}>
+              <input
+                type="search"
+                className="form-control mr-sm-2"
+                placeholder="Enter the Github User"
+                onChange={this.userChange}
+              />
+              <button
+                type="submit"
+                className="btn btn-outline-light my-2 my-sm-0"
+                onSubmit={this.userSubmit}
+              >
                 Search
               </button>
             </form>
-          </div>
-        </nav>
+          </nav>
+        </div>
         <div className="container">
           <br />
           {this.state.data ? (
