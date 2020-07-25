@@ -80,7 +80,7 @@ export default class Dashboard extends Component {
                   <div className="card-body d-flex">
                     <a
                       href={item.html_url}
-                      className="btn btn-info btn-sm  mr-3"
+                      className="btn btn-success btn-sm  mr-3"
                     >
                       Github
                     </a>
